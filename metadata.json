@@ -1,0 +1,6 @@
+{
+  "name": "PCSHS Science Project Hub",
+  "description": "แพลตฟอร์มเสนอโครงงานวิทยาศาสตร์เคมีอาหาร นวัตกรรมเนื้อเทียมโปรตีนสูงถั่วเหลือง ควินัว เมล็ดเจีย ด้วยสีประจำสัญลักษณ์ส้ม-น้ำเงิน รองรับการอธิบายภาพและให้คำปรึกษาด้วย Gemini AI บนทุกอุปกรณ์",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
