@@ -33,7 +33,8 @@ import {
   X,
   Plus,
   Play,
-  Square
+  Square,
+  Star
 } from 'lucide-react';
 import { DEFAULT_PROJECT, PRESET_IMAGES } from './data';
 import { AccessibilitySettings, TeacherFeedback, ExperimentStep } from './types';
@@ -41,9 +42,66 @@ import { AccessibilitySettings, TeacherFeedback, ExperimentStep } from './types'
 export default function App() {
   // Application states
   const [project, setProject] = useState(DEFAULT_PROJECT);
-  const [activeTab, setActiveTab] = useState<'overview' | 'experiments' | 'ai-lab'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'experiments' | 'ai-lab' | 'feedback'>('overview');
   const [selectedExperiment, setSelectedExperiment] = useState<string>(DEFAULT_PROJECT.experiments[0].id);
   const [experimentTone, setExperimentTone] = useState<Record<string, 'normal' | 'scientific' | 'kids'>>({});
+
+  // 📝 Feedbacks & Ratings State and Handler
+  const [feedbacks, setFeedbacks] = useState<TeacherFeedback[]>([
+    {
+      id: 'fb-1',
+      author: 'รศ.ดร. นงพะงา วิทยธานี',
+      role: 'ผู้เชี่ยวชาญ',
+      content: 'ผลงานการบูรณาการถั่วเหลืองเชียงใหม่ 60 ร่วมกับควินัวและใยเจลาตินจากเมล็ดเจียเป็นแนวคิดที่ยอดเยี่ยมมาก มีการแก้ไขจุดอ่อนของสเต็กเนื้อพืชทั่วไปด้วยลายไขมันอิมัลชันที่เกาะกันแข็งตัวด้วยคาราจีแนนได้ละเอียดสมจริง',
+      rating: 5,
+      createdAt: '2026-05-28 09:30'
+    },
+    {
+      id: 'fb-2',
+      author: 'ผศ. อนุรักษ์ สมบูรณ์พัตร',
+      role: 'กรรมการวิชาการ',
+      content: 'การทดสอบวัดค่า Tensile Strength และการวิเคราะห์ปริมาณโปรตีนด้วยวิธี Kjeldahl สะท้อนวิสัยทัศน์ทางวิชาการและการควบคุมตัวแปรที่เที่ยงตรงมาก มีความน่าเลื่อมใสในฐานะผู้เรียนโรงเรียนวิทยาศาสตร์จุฬาภรณราชวิทยาลัย',
+      rating: 5,
+      createdAt: '2026-05-29 14:15'
+    },
+    {
+      id: 'fb-3',
+      author: 'คุณครู รัชนีวรรณ ทรงศรี',
+      role: 'ครูที่ปรึกษา',
+      content: 'นักเรียนกลุ่มนี้ตั้งใจค้นคว้าเป็นหลักหลายสัปดาห์ การดึงอัตราส่วนถั่วเหลือง 1:3 ร่วมกับควินัวและเมล็ดเจียดึงเอาสรรพคุณอมน้ำได้ดี การเพิ่มหน้าสำหรับประเมินผลนี้จะช่วยเก็บสารสนเทศนำไปปรับปรุงระดับงานต่อไปได้ดี',
+      rating: 5,
+      createdAt: '2026-05-30 11:00'
+    }
+  ]);
+
+  const [newFeedback, setNewFeedback] = useState({
+    author: '',
+    role: 'ผู้ชมทั่วไป' as TeacherFeedback['role'],
+    content: '',
+    rating: 5
+  });
+
+  const handleAddFeedback = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newFeedback.author.trim() || !newFeedback.content.trim()) return;
+
+    const feedbackToAdd: TeacherFeedback = {
+      id: `fb-${Date.now()}`,
+      author: newFeedback.author.trim(),
+      role: newFeedback.role,
+      content: newFeedback.content.trim(),
+      rating: newFeedback.rating,
+      createdAt: new Date().toISOString().replace('T', ' ').substring(0, 16)
+    };
+
+    setFeedbacks(prev => [feedbackToAdd, ...prev]);
+    setNewFeedback({
+      author: '',
+      role: 'ผู้ชมทั่วไป',
+      content: '',
+      rating: 5
+    });
+  };
 
   // Mobile menu trigger
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -384,20 +442,21 @@ export default function App() {
         <div className="absolute top-0 right-0 w-64 h-64 bg-pcshs-orange/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-[-50px] left-[10%] w-80 h-80 bg-pcshs-blue-light/20 rounded-full blur-3xl pointer-events-none" />
 
+        {/* 🏛️ ตราโรงเรียนจุฬาภรณราชวิทยาลัย นครศรีธรรมราช ขนาดใหญ่เป็นสัญลักษณ์แบบเวกเตอร์และข้อความเพื่อแก้ปัญหารูปลิงก์เสีย */}
+        <div className="absolute right-6 md:right-16 top-1/2 -translate-y-1/2 w-64 h-64 md:w-96 md:h-96 opacity-[0.06] pointer-events-none select-none hidden sm:flex flex-col items-center justify-center text-pcshs-orange">
+          <FlaskConical className="w-48 h-48 md:w-72 md:h-72 stroke-[1.25] animate-pulse" />
+          <span className="font-mono text-xl md:text-3xl font-extrabold tracking-widest mt-2 uppercase text-white">PCSHS NST</span>
+        </div>
+
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8">
           {/* Decorative PCSHS Digital Emblem and Category Badge */}
           <div className="flex flex-col items-center text-center">
-            <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-2xl bg-white p-2.5 flex flex-col items-center justify-center shadow-lg border-2 border-pcshs-orange/40 hover:scale-105 transition-transform duration-200" title="โรงเรียนวิทยาศาสตร์จุฬาภรณราชวิทยาลัย นครศรีธรรมราช">
-              {/* Actual School Emblem Graphic */}
-              <img
-                src="/assets/input_file_5.png"
-                onError={(e) => {
-                  e.currentTarget.src = "https://upload.wikimedia.org/wikipedia/commons/e/e6/Logo_of_Princess_Chulabhorn_Science_High_School_Nakhon_Si_Thammarat.png";
-                }}
-                alt="ตราสัญลักษณ์โรงเรียนวิทยาศาสตร์จุฬาภรณราชวิทยาลัย นครศรีธรรมราช"
-                className="w-full h-full object-contain"
-                referrerPolicy="no-referrer"
-              />
+            <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-2xl bg-white dark:bg-zinc-900 p-2.5 flex flex-col items-center justify-center shadow-lg border-2 border-pcshs-orange/40 hover:scale-105 transition-transform duration-200" title="โครงการโรงเรียนวิทยาศาสตร์จุฬาภรณราชวิทยาลัย นครศรีธรรมราช">
+              {/* Actual School Emblem replaced with high contrast lab flask icon and bold label tag to resolve broken image issues in sandboxed environment */}
+              <div className="w-16 h-16 md:w-20 md:h-20 bg-orange-100/50 dark:bg-zinc-800 rounded-xl flex flex-col items-center justify-center border border-pcshs-orange/30 shadow-inner p-1">
+                <FlaskConical className="w-7 h-7 md:w-9 md:h-9 text-pcshs-orange animate-pulse" />
+                <span className="text-[9px] md:text-[10px] font-black text-pcshs-orange dark:text-orange-400 mt-0.5 uppercase tracking-tighter leading-none font-mono">PCSHS NST</span>
+              </div>
               <span className="absolute -bottom-2.5 bg-pcshs-orange text-white text-[10px] font-bold px-3 py-0.5 rounded-full shadow-md uppercase tracking-wider">
                 ม.ต้น
               </span>
@@ -492,6 +551,18 @@ export default function App() {
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>ห้องพิจารณา / คลาวด์กล้อง AI</span>
+            </button>
+            <button
+              id="tab-feedback"
+              onClick={() => setActiveTab('feedback')}
+              className={`flex items-center gap-2 px-5 py-2 font-extrabold text-xs uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer border-b-2 ${
+                activeTab === 'feedback'
+                  ? 'text-pcshs-orange border-pcshs-orange font-bold'
+                  : 'text-slate-600 border-transparent hover:text-slate-900 dark:text-zinc-400 hover:border-slate-300'
+              }`}
+            >
+              <MessageSquare className="w-3.5 h-3.5" />
+              <span>ความคิดเห็นและดารารีวิว</span>
             </button>
           </div>
 
@@ -1167,8 +1238,9 @@ export default function App() {
                           </div>
                         </div>
                       ) : (
-                        <div className="h-40 rounded-xl bg-slate-200/50 dark:bg-zinc-800/80 flex items-center justify-center text-xs text-slate-700 dark:text-zinc-200 font-extrabold border-2 border-dashed border-slate-300 dark:border-zinc-700 text-center p-4">
-                          กรุณาเลือกรูปภาพจำลองทางด้านซ้าย หรืออัปโหลดไฟล์จริงเพื่อทดลองใช้งานกล้องสแกน AI
+                        <div className="h-40 rounded-xl bg-slate-200/50 dark:bg-zinc-800/80 flex flex-col items-center justify-center text-xs text-slate-700 dark:text-zinc-200 font-extrabold border-2 border-dashed border-slate-300 dark:border-zinc-700 text-center p-4 gap-2">
+                          <FlaskConical className="w-8 h-8 text-pcshs-orange/45 animate-pulse" />
+                          <span>กรุณาเลือกรูปภาพจำลองทางด้านซ้าย หรืออัปโหลดไฟล์จริงเพื่อทดลองใช้งานกล้องสแกน AI</span>
                         </div>
                       )}
 
@@ -1244,6 +1316,285 @@ export default function App() {
                   </div>
                 )}
               </section>
+
+            </div>
+          )}
+
+          {/* ==================== TAB 4: PROJECT EVALUATIONS & USER FEEDBACK ==================== */}
+          {activeTab === 'feedback' && (
+            <div className="space-y-8 animate-fadeIn" id="section-feedback">
+              
+              {/* Header Box */}
+              <div className={`p-6 rounded-2xl border transition-all ${
+                a11y.highContrast ? 'bg-zinc-900 border-zinc-800 text-white' : 'bg-white border-slate-200 text-slate-800'
+              }`}>
+                <h2 className="text-xl font-bold dark:text-white flex items-center gap-2">
+                  <MessageSquare className="text-pcshs-orange w-5 h-5 shrink-0" />
+                  <span>ความคิดเห็นและเครื่องมือประเมินผลระดับดวงดาว</span>
+                </h2>
+                <p className="text-xs text-slate-500 mt-1">
+                  แบบสอบถามและระดับประเมินความพึงพอใจสำหรับโครงงานวิทยาศาสตร์การสกัดโปรตีนพืชลายไขมันอาร์กติก
+                </p>
+              </div>
+
+              {/* Statistics & Insights Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                {/* Score Summary (4 Units) */}
+                <div className={`md:col-span-4 p-6 rounded-2xl border flex flex-col justify-center items-center text-center transition-all ${
+                  a11y.highContrast ? 'bg-zinc-900 border-zinc-850 text-white' : 'bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200 text-slate-800'
+                }`}>
+                  <span className="text-slate-400 font-bold text-xs uppercase tracking-wider block">คะแนนประเมินเฉลี่ย</span>
+                  
+                  {(() => {
+                    const avg = feedbacks.length > 0 
+                      ? (feedbacks.reduce((sum, f) => sum + f.rating, 0) / feedbacks.length).toFixed(1)
+                      : "5.0";
+                    return (
+                      <>
+                        <span className="text-5xl font-extrabold text-slate-800 dark:text-white mt-1.5 font-mono">
+                          {avg}
+                        </span>
+                        
+                        {/* Core Stars row display */}
+                        <div className="flex gap-1 mt-2">
+                          {[1, 2, 3, 4, 5].map((s) => {
+                            const starValue = parseFloat(avg);
+                            return (
+                              <Star 
+                                key={s} 
+                                className={`w-5 h-5 ${
+                                  s <= starValue 
+                                    ? 'text-yellow-400 fill-yellow-400' 
+                                    : s - 0.5 <= starValue 
+                                      ? 'text-yellow-400 fill-yellow-400 opacity-70' 
+                                      : 'text-slate-300'
+                                }`} 
+                              />
+                            );
+                          })}
+                        </div>
+                      </>
+                    );
+                  })()}
+
+                  <span className="text-slate-500 text-xs mt-3 block font-semibold">
+                    จากทั้งหมด {feedbacks.length} ความคิดเห็นวิทยาทุกกลุ่ม
+                  </span>
+                </div>
+
+                {/* Progress Distribution (8 Units) */}
+                <div className={`md:col-span-8 p-6 rounded-2xl border space-y-3 transition-all ${
+                  a11y.highContrast ? 'bg-zinc-900 border-zinc-800 text-white' : 'bg-white border-slate-200 text-slate-800'
+                }`}>
+                  <span className="text-slate-600 dark:text-zinc-300 text-xs font-bold uppercase tracking-wider block border-b pb-1.5">
+                    สัดส่วนระบายระดับดาวประเมิน (Star Distribution)
+                  </span>
+
+                  {[5, 4, 3, 2, 1].map((stars) => {
+                    const count = feedbacks.filter(f => f.rating === stars).length;
+                    const percent = feedbacks.length > 0 ? (count / feedbacks.length) * 100 : 0;
+                    return (
+                      <div key={stars} className="flex items-center gap-3 text-xs">
+                        <span className="w-10 font-bold font-mono text-slate-500 flex items-center gap-0.5">
+                          {stars} <Star className="w-3 h-3 text-yellow-400 fill-yellow-400 inline shrink-0" />
+                        </span>
+                        <div className="flex-1 h-2 bg-slate-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-pcshs-orange transition-all duration-500"
+                            style={{ width: `${percent}%` }}
+                          />
+                        </div>
+                        <span className="w-8 text-right font-semibold font-mono text-slate-400">{count} รีวิว</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Form Input Block & Card Listing */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                {/* Left Form (5 Units) */}
+                <div className="lg:col-span-5 space-y-4">
+                  <div className={`p-6 rounded-2xl border shadow-sm transition-all ${
+                    a11y.highContrast ? 'bg-zinc-900 border-zinc-800 text-white' : 'bg-white border-slate-200 text-slate-800'
+                  }`}>
+                    <h3 className="font-bold text-sm text-pcshs-blue dark:text-orange-400 uppercase tracking-wider border-b pb-3 flex items-center gap-2">
+                      <Plus className="w-4 h-4 text-pcshs-orange shrink-0" />
+                      <span>บันทึกความเห็นใหม่ (Add Feedback)</span>
+                    </h3>
+
+                    <form onSubmit={handleAddFeedback} className="space-y-4 mt-4">
+                      {/* Name input */}
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-slate-600 dark:text-zinc-400">ชื่อผู้ร่วมประเมิน (Name):</label>
+                        <div className="relative">
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                            <User className="w-4 h-4" />
+                          </div>
+                          <input
+                            type="text"
+                            placeholder="ระบุชื่อวิชาการ ผู้ชม หรือกรรมการ"
+                            value={newFeedback.author}
+                            onChange={(e) => setNewFeedback(prev => ({ ...prev, author: e.target.value }))}
+                            className="w-full pl-9 p-2.5 text-xs rounded-lg border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-900 dark:text-white"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      {/* Role selection dropdown */}
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-slate-600 dark:text-zinc-400">ประเภทระดับบทบาท (Role):</label>
+                        <select
+                          value={newFeedback.role}
+                          onChange={(e: any) => setNewFeedback(prev => ({ ...prev, role: e.target.value }))}
+                          className="w-full p-2.5 text-xs font-semibold rounded-lg border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-900 dark:text-white"
+                        >
+                          <option value="ผู้ชมทั่วไป">ผู้ชมทั่วไป (Guest User)</option>
+                          <option value="ครูที่ปรึกษา">คุณครูนิเทศก์/ครูที่ปรึกษา (Advisor)</option>
+                          <option value="ผู้เชี่ยวชาญ">ผู้เชี่ยวชาญฟู้ดเทค (Industry Expert)</option>
+                          <option value="กรรมการวิชาการ">กรรมการวิชาการวิทยศึกษา (Academic Judge)</option>
+                        </select>
+                      </div>
+
+                      {/* Interactive Stars Row input Selection */}
+                      <div className="space-y-1.5">
+                        <label className="text-xs font-bold text-slate-600 dark:text-zinc-400 block">ระดับดาวความพึงพอใจสูงสุด (Star Count):</label>
+                        <div className="flex items-center gap-1 bg-slate-50 dark:bg-zinc-850 p-2.5 rounded-lg border border-slate-200">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              type="button"
+                              onClick={() => setNewFeedback(prev => ({ ...prev, rating: star }))}
+                              className="p-1 hover:scale-115 transition-transform cursor-pointer"
+                            >
+                              <Star 
+                                className={`w-6 h-6 transition-colors ${
+                                  star <= newFeedback.rating 
+                                    ? 'text-yellow-400 fill-yellow-400' 
+                                    : 'text-slate-300 dark:text-zinc-700'
+                                }`} 
+                              />
+                            </button>
+                          ))}
+                          <span className="text-xs font-mono font-bold text-slate-500 ml-2">
+                            ({newFeedback.rating} จาก 5 ดาว)
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Message textarea text */}
+                      <div className="space-y-1">
+                        <label className="text-xs font-bold text-slate-600 dark:text-zinc-400">ข้อเสนอเสนอแนะเชิงชีววิทยาและฟิสิกส์ (Message):</label>
+                        <textarea
+                          rows={4}
+                          placeholder="พิมพ์ข้อคิดเห็น วิเคราะห์วิจารณ์ การพัฒนาสัดส่วนสูตร หรือประทับใจผลงาน..."
+                          value={newFeedback.content}
+                          onChange={(e) => setNewFeedback(prev => ({ ...prev, content: e.target.value }))}
+                          className="w-full p-3 text-xs rounded-lg border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-900 dark:text-white leading-relaxed"
+                          required
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="w-full bg-pcshs-orange text-white py-2.5 px-4 rounded-xl text-xs font-bold hover:bg-pcshs-orange-dark shadow hover:scale-[1.01] transition-transform cursor-pointer flex items-center justify-center gap-1.5"
+                      >
+                        <span>✓ บันทึกการให้คะแนนเสียง</span>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+
+                {/* Right Lists (7 Units) */}
+                <div className="lg:col-span-7 space-y-4">
+                  <div className="flex items-center justify-between border-b pb-2">
+                    <h3 className="font-bold text-xs text-slate-400 uppercase tracking-widest">
+                      กระดานแลกเปลี่ยนผลประเมินล่าสุด ({feedbacks.length} คัดสรร)
+                    </h3>
+                  </div>
+
+                  {feedbacks.length === 0 ? (
+                    <div className="p-12 text-center border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50 dark:bg-zinc-900">
+                      <MessageSquare className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                      <p className="text-slate-500 font-bold text-xs">ยังไม่มีรีวิวจากดวงดาวใด ๆ บันทึกเป็นชิ้นแรกด้านข้างได้เลยครับ</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3 max-h-[560px] overflow-y-auto pr-1">
+                      {feedbacks.map((item) => {
+                        const getRoleBadge = (role: string) => {
+                          switch(role) {
+                            case 'ครูที่ปรึกษา':
+                              return 'bg-orange-100 text-pcshs-orange border-orange-200 dark:bg-orange-950/40 dark:text-orange-400';
+                            case 'ผู้เชี่ยวชาญ':
+                              return 'bg-indigo-100 text-indigo-700 border-indigo-200 dark:bg-indigo-950/40 dark:text-indigo-400';
+                            case 'กรรมการวิชาการ':
+                              return 'bg-teal-100 text-teal-700 border-teal-200 dark:bg-teal-950/40 dark:text-teal-400';
+                            default:
+                              return 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-zinc-800/80 dark:text-zinc-300';
+                          }
+                        };
+
+                        return (
+                          <div 
+                            key={item.id} 
+                            className={`p-4 rounded-xl border flex flex-col space-y-2.5 transition-all text-xs ${
+                              a11y.highContrast ? 'bg-zinc-900 border-zinc-700 text-white' : 'bg-white border-slate-150 hover:border-slate-300 hover:shadow-sm text-slate-800'
+                            }`}
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="space-y-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-extrabold text-slate-800 dark:text-zinc-100">
+                                    {item.author}
+                                  </span>
+                                  <span className={`px-2 py-0.5 rounded text-[9px] font-bold border uppercase tracking-wider ${getRoleBadge(item.role)}`}>
+                                    {item.role}
+                                  </span>
+                                </div>
+                                <span className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
+                                  ⏱️ เผยเมื่อ: {item.createdAt} น.
+                                </span>
+                              </div>
+
+                              {/* Simple score stars row */}
+                              <div className="flex gap-0.5">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <Star 
+                                    key={star} 
+                                    className={`w-3.5 h-3.5 ${
+                                      star <= item.rating 
+                                        ? 'text-yellow-400 fill-yellow-400' 
+                                        : 'text-slate-200'
+                                    }`} 
+                                  />
+                                ))}
+                              </div>
+                            </div>
+
+                            <p className="text-slate-700 dark:text-zinc-200 leading-relaxed text-xs">
+                              {item.content}
+                            </p>
+
+                            <div className="flex items-center justify-between border-t border-slate-100 dark:border-zinc-850 pt-2 text-[10px] text-slate-500">
+                              <span>วิจัยโครงงานสิริโภชนาการพืช - สัมประสิทธิ์การดึง</span>
+                              <button
+                                type="button"
+                                onClick={() => speakText(`ผู้ให้ความเห็น ${item.author} ในบทบาท ${item.role} ดึงระดับความพอใจประเมิน ${item.rating} ดาว แถลงข้อมูลว่า ${item.content}`)}
+                                className="text-pcshs-orange hover:text-pcshs-orange-dark font-bold flex items-center gap-1 cursor-pointer"
+                              >
+                                <Volume2 className="w-3 h-3" /> ฟังเสียงบรรยาย TH
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+              </div>
 
             </div>
           )}
@@ -1435,15 +1786,10 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
           
           <div className="flex items-center gap-3 justify-center md:justify-start">
-            <img
-              src="/assets/input_file_5.png"
-              onError={(e) => {
-                e.currentTarget.src = "https://upload.wikimedia.org/wikipedia/commons/e/e6/Logo_of_Princess_Chulabhorn_Science_High_School_Nakhon_Si_Thammarat.png";
-              }}
-              alt="ตราสัญลักษณ์โรงเรียน"
-              className="w-10 h-10 object-contain shrink-0"
-              referrerPolicy="no-referrer"
-            />
+            <div className="w-12 h-12 bg-white/10 rounded-lg flex flex-col items-center justify-center border border-white/20 shrink-0 p-1" title="PCSHS NST">
+              <FlaskConical className="w-4 h-4 text-pcshs-orange" />
+              <span className="text-[8px] font-bold text-white tracking-tighter mt-0.5 leading-none font-mono uppercase">NST</span>
+            </div>
             <div className="space-y-1 text-left">
               <h4 className="font-bold text-white text-sm flex items-center gap-2">
                 <span>PCSHS Science Project Hub - PCSHS Nakhon Si Thammarat</span>
