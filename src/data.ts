@@ -194,43 +194,23 @@ export const DEFAULT_PROJECT: ProjectData = {
 
 export const PRESET_IMAGES = [
   {
-    name: "1. Raw Soy Milk Cooking & Boiling (การต้มสกัดเจลน้ำนมถั่วเหลืองบริสุทธิ์)",
-    url: "/assets/input_file_3.png",
-    desc: "การต้มน้ำนมถั่วเหลืองธรรมชาติเพื่อตกตะกอนก้อนโปรตีนแผ่นโครงสร้างพื้นฐานสำหรับเนื้อเทียมสูตรสามสหาย"
-  },
-  {
-    name: "2. Coconut Oil & Carrageenan Emulsion (การเตรียมสูตรอิมัลชันไขมันแทรกลาย)",
-    url: "/assets/input_file_2.png",
-    desc: "ส่วนผสมระหว่างน้ำมันมะพร้าวอิ่มตัว สารสกัดคาร์ราจีแนนสาหร่าย และน้ำ เพื่อเลียนแบบชั้นไขมันแทรกนุ่มละลายในเนื้อสัตว์จริง"
-  },
-  {
-    name: "3. Coagulated Plant-Protein Sheet on Drying Rack (แผ่นเจลโปรตีนบ่มตัวบนแผงตากแห้ง)",
-    url: "/assets/input_file_0.png",
-    desc: "แผ่นฟิล์มเต้าหู้โปรตีนสกัดเข้มข้นจากถั่วเหลือง ควินัว แผ่บนตะแกรงแสตนเลสเพื่อไล่ความชื้นและสร้างความเหนียวดึงตัวแบบแผ่นพังผืดกล้ามเนื้อ"
-  },
-  {
-    name: "4. Micro-Structure Fat Emulsion Injection (การพ่นฉีดสร้างลายเส้นริ้วไขมันพืช)",
-    url: "/assets/input_file_1.png",
-    desc: "การใช้ Syringe เข็มฉีดยาอุตสาหกรรมในแล็บ ต่อยอดการฉีดสารอิมัลชันไขมันมะพร้าวเข้าไปในเนื้อชั้นพาร์ทก้อนโปรตีนอย่างแม่นยำ"
-  },
-  {
-    name: "5. Slicing Coagulated Cooked Plant-Based Meat (การเกรียมหั่นพิจารณาเนื้อเทียมปรุงสุก)",
-    url: "/assets/input_file_4.png",
-    desc: "ชิ้นเนื้อเทียมพืชทอดสุกกรอบถูกสไลด์แบ่งตามขวาง เพื่อทดสอบปริมาณสารอาหารสัมผัสและสเปซลายริ้วไขมันสลับพืชผักสีเหลืองทอง"
-  },
-  {
-    name: "6. Official School Emblem of PCSHS NST (ตราสัญลักษณ์ประจำสถาบัน จภ. นครศรีธรรมราช)",
-    url: "/assets/input_file_5.png",
-    desc: "ตราพระเกี้ยวสีทองมงกุฎเคียงริบบิ้นน้ำเงิน-เหลือง สัญลักษณ์แสดงวิทยาศาสตร์จุฬาภรณราชวิทยาลัย นครศรีธรรมราช ผู้พัฒนาโครงการวิจัยชื้นนี้"
-  },
-  {
-    name: "Amino Acid Laboratory Testing (ปฏิบัติการทดลองเคมีฟิสิกส์วิเคราะห์เดิม)",
-    url: "https://images.unsplash.com/photo-1532187863486-abf9d39d66e8?auto=format&fit=crop&w=800&q=80",
-    desc: "การกลั่นตัวอย่างหาค่าโปรตีนรวมกรดอะมิโนด้วยกระบวนการ Kjeldahl ในห้องทดลองวิจัย"
-  },
-  {
-    name: "Soybean and Grains (วัตถุดิบซุปถั่วเหลืองและเมล็ดเจียคัดนวัตกรรมเดิม)",
+    name: "Soybean and Grains (วัตถุดิบซุปถั่วเหลืองและเมล็ดเจียคัดนวัตกรรม)",
     url: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80",
-    desc: "ถั่วเหลืองเกษตรและกองเมล็ดพืชอุดมโปรตีนครบสูตรสากลโลก"
+    desc: "ถั่วเหลืองเกษตรและกองเมล็ดพืชอุดมโปรตีนครบสูตร"
+  },
+  {
+    name: "Amino Acid Laboratory Testing (ปฏิบัติการทดลองเคมีฟิสิกส์วิเคราะห์)",
+    url: "https://images.unsplash.com/photo-1532187863486-abf9d39d66e8?auto=format&fit=crop&w=800&q=80",
+    desc: "การกลั่นตัวอย่างหาค่าโปรตีนกรดอะมิโนด้วยกระบวนการ Kjeldahl"
+  },
+  {
+    name: "Embedded Control IoT Board (ฮาร์ดแวร์วัดความเสถียรและควบคุมสารอาหาร)",
+    url: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80",
+    desc: "ชุดไมโครคอนโทรลเลอร์ตรวจรับการหมุนเวียนถาดแช่แข็งอัจฉริยะ"
+  },
+  {
+    name: "Data Analytics Showcase Dashboard (ผลการสรุปรายงานการกระจายแร่ธาตุ)",
+    url: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+    desc: "กราฟแรงเฉือนสูงสุดและตารางคำนวณสารสกัดแทนนิน"
   }
 ];

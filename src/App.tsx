@@ -41,36 +41,9 @@ import { AccessibilitySettings, TeacherFeedback, ExperimentStep } from './types'
 export default function App() {
   // Application states
   const [project, setProject] = useState(DEFAULT_PROJECT);
-  const [activeTab, setActiveTab] = useState<'overview' | 'experiments' | 'ai-lab' | 'feedback'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'experiments' | 'ai-lab'>('overview');
   const [selectedExperiment, setSelectedExperiment] = useState<string>(DEFAULT_PROJECT.experiments[0].id);
   const [experimentTone, setExperimentTone] = useState<Record<string, 'normal' | 'scientific' | 'kids'>>({});
-  
-  // Custom feedback/evaluations list
-  const [feedbacks, setFeedbacks] = useState<TeacherFeedback[]>([
-    {
-      id: 'fb-1',
-      author: 'ผศ.ดร.เกรียงไกร ชัยชนะ',
-      role: 'ผู้เชี่ยวชาญ',
-      content: 'การสกัดเอาไลซีนและกรดอะมิโนครบ 9 ชนิดได้จากส่วนผสมทั้งสามสหายเป็นสิ่งที่ตอบโจทย์เชิงเคมีอาหารมาก วัฒนาการสร้างอิมัลชันของน้ำมันมะพร้าวเกาะคาราจีแนนถือเป็นทริกที่ดีมากช่วยแก้ปัญหาน้ำมันละลายฉับพลันตอนโดนความร้อนได้ดีเลิศครับ',
-      rating: 5,
-      createdAt: '2026-05-29 14:32'
-    },
-    {
-      id: 'fb-2',
-      author: 'ครูสมศรี พิบูลย์วงค์',
-      role: 'ครูที่ปรึกษา',
-      content: 'เด็ก ๆ ทำงานได้ละเอียดมากค่ะ โดยเฉพาะการใช้วิธีวิเคราะห์ Kjeldahl ตรวจสอบความถูกต้องของสัดส่วนโปรตีนเพื่อให้มั่นใจว่าได้ 50g จริงๆ ทางโรงเรียนพร้อมสนับสนุนให้ส่งประกวดในเวทีสัปดาห์วิทยาศาสตร์ ซ.ภ. ต่อไปเลยค่ะ!',
-      rating: 5,
-      createdAt: '2026-05-30 08:15'
-    }
-  ]);
-  
-  const [newFeedback, setNewFeedback] = useState({
-    author: '',
-    role: 'ผู้ชมทั่วไป' as TeacherFeedback['role'],
-    content: '',
-    rating: 5
-  });
 
   // Mobile menu trigger
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -260,32 +233,6 @@ export default function App() {
     // For convenience we fetch and turn to base64, or pass simple fake base64. Let's send directly since server handles it robustly.
     setUserImage(url);
     setAiAnalysisResult(null);
-  };
-
-  // Handle Form Comment Submit
-  const handleAddFeedback = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newFeedback.author.trim() || !newFeedback.content.trim()) {
-      alert('กรุณากรอกชื่อผู้ร่วมแสดงความคิดเห็นและเนื้อความให้ครบถ้วน');
-      return;
-    }
-
-    const item: TeacherFeedback = {
-      id: `fb-user-${Date.now()}`,
-      author: newFeedback.author,
-      role: newFeedback.role,
-      content: newFeedback.content,
-      rating: newFeedback.rating,
-      createdAt: new Date().toISOString().replace('T', ' ').substring(0, 16)
-    };
-
-    setFeedbacks([item, ...feedbacks]);
-    setNewFeedback({
-      author: '',
-      role: 'ผู้ชมทั่วไป',
-      content: '',
-      rating: 5
-    });
   };
 
   // Accessibility Font Weight and Grid Layout Class Configs
@@ -546,18 +493,6 @@ export default function App() {
               <Sparkles className="w-3.5 h-3.5" />
               <span>ห้องพิจารณา / คลาวด์กล้อง AI</span>
             </button>
-            <button
-              id="tab-feedback"
-              onClick={() => setActiveTab('feedback')}
-              className={`flex items-center gap-2 px-5 py-2 font-extrabold text-xs uppercase tracking-wider transition-all whitespace-nowrap cursor-pointer border-b-2 ${
-                activeTab === 'feedback'
-                  ? 'text-pcshs-orange border-pcshs-orange font-bold'
-                  : 'text-slate-600 border-transparent hover:text-slate-900 dark:text-zinc-400 hover:border-slate-300'
-              }`}
-            >
-              <MessageSquare className="w-3.5 h-3.5" />
-              <span>ความคิดเห็นและประเมินผล ({feedbacks.length})</span>
-            </button>
           </div>
 
           <div className="text-xs text-slate-500 hidden lg:block">
@@ -617,10 +552,10 @@ export default function App() {
                       01
                     </div>
                     <div>
-                      <h2 className={`font-bold text-pcshs-blue-light dark:text-pcshs-orange-light ${getFontSizeClass('heading')}`}>
+                      <h2 className={`font-extrabold text-slate-900 border-l-4 border-pcshs-orange pl-3 dark:text-amber-400 ${getFontSizeClass('heading')}`}>
                         1. วัตถุประสงค์ (Objectives)
                       </h2>
-                      <p className="text-xs text-slate-500">เป้าหมายเชิงกลยุทธ์หลักสี่ประการที่เรามุ่งวิจัย</p>
+                      <p className="text-xs text-slate-500 pl-3">เป้าหมายเชิงกลยุทธ์หลักสี่ประการที่เรามุ่งวิจัย</p>
                     </div>
                   </div>
                   {a11y.readingAssistance && (
@@ -668,10 +603,10 @@ export default function App() {
                       02
                     </div>
                     <div>
-                      <h2 className={`font-bold text-pcshs-blue-light dark:text-pcshs-orange-light ${getFontSizeClass('heading')}`}>
+                      <h2 className={`font-extrabold text-slate-900 border-l-4 border-pcshs-orange pl-3 dark:text-amber-400 ${getFontSizeClass('heading')}`}>
                         2. สมมติฐาน (Scientific Hypotheses)
                       </h2>
-                      <p className="text-xs text-slate-500">กรอบการทดลองเพื่อคาดคะแนความเชื่อมโยงของผลลัพธ์</p>
+                      <p className="text-xs text-slate-500 pl-3">กรอบการทดลองเพื่อคาดคะแนความเชื่อมโยงของผลลัพธ์</p>
                     </div>
                   </div>
                   {a11y.readingAssistance && (
@@ -718,10 +653,10 @@ export default function App() {
                       <BookOpen className="w-6 h-6" />
                     </div>
                     <div>
-                      <h2 className={`font-bold text-pcshs-blue-light dark:text-pcshs-orange-light ${getFontSizeClass('heading')}`}>
+                      <h2 className={`font-extrabold text-slate-900 border-l-4 border-pcshs-orange pl-3 dark:text-amber-400 ${getFontSizeClass('heading')}`}>
                         3. บทคัดย่อ (Abstract)
                       </h2>
-                      <p className="text-xs text-slate-500">สรุปความเป็นมา ปริมาณการทดแทนกรดอะมิโนครบถ้วน และผลลัพธ์</p>
+                      <p className="text-xs text-slate-500 pl-3">สรุปความเป็นมา ปริมาณการทดแทนกรดอะมิโนครบถ้วน และผลลัพธ์</p>
                     </div>
                   </div>
                 </div>
@@ -784,10 +719,10 @@ export default function App() {
                       <Award className="w-6 h-6" />
                     </div>
                     <div>
-                      <h2 className={`font-bold text-pcshs-blue-light dark:text-pcshs-orange-light ${getFontSizeClass('heading')}`}>
+                      <h2 className={`font-extrabold text-slate-900 border-l-4 border-pcshs-orange pl-3 dark:text-amber-400 ${getFontSizeClass('heading')}`}>
                         4. คุณประโยชน์และการต่อยอดใช้งานจริง
                       </h2>
-                      <p className="text-xs text-slate-500">การขยายผลสติปัญญาทางนวัตกรรมอาหารสู่สังคมและเศรษฐกิจประเทศ</p>
+                      <p className="text-xs text-slate-500 pl-3">การขยายผลสติปัญญาทางนวัตกรรมอาหารสู่สังคมและเศรษฐกิจประเทศ</p>
                     </div>
                   </div>
                 </div>
@@ -839,8 +774,8 @@ export default function App() {
                     <FlaskConical className="w-5 h-5 text-pcshs-orange shadow-sm" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold dark:text-white">8 ขั้นตอนและเป้าหมายการทดลองเชิงวิทยาศาสตร์เคมีอาหาร</h2>
-                    <p className="text-xs text-slate-500">คลิกเลือกปุ่มหมายเลขการทดลองด้านล่างเพื่อสลับพิจารณารายงานเชิงลึก</p>
+                    <h2 className="text-xl md:text-2xl font-extrabold text-slate-900 border-l-4 border-pcshs-orange pl-3 dark:text-amber-400">8 ขั้นตอนและเป้าหมายการทดลองเชิงวิทยาศาสตร์เคมีอาหาร</h2>
+                    <p className="text-xs text-slate-500 pl-3">คลิกเลือกปุ่มหมายเลขการทดลองด้านล่างเพื่อสลับพิจารณารายงานเชิงลึก</p>
                   </div>
                 </div>
               </div>
@@ -1050,8 +985,8 @@ export default function App() {
               <div id="ai-lab-header" className="pb-3 border-b border-slate-200 flex items-center gap-2">
                 <Sparkles className="w-6 h-6 text-pcshs-orange animate-bounce" />
                 <div>
-                  <h2 className="text-xl font-bold dark:text-white">ห้องปฏิบัติการวิทยาศาสตร์อัจฉริยะ (PCSHS AI Food-Science Room)</h2>
-                  <p className="text-xs text-slate-500">ทดลองให้ AI ที่ปรึกษาตรวจให้คะแนน เสนอโครงงาน หรือวิเคราะห์ความพร้อมวัตถุดิบลายไขมันพืช</p>
+                  <h2 className="text-xl md:text-2xl font-extrabold text-slate-900 border-l-4 border-pcshs-orange pl-3 dark:text-amber-400">ห้องปฏิบัติการวิทยาศาสตร์อัจฉริยะ (PCSHS AI Food-Science Room)</h2>
+                  <p className="text-xs text-slate-500 pl-3">ทดลองให้ AI ที่ปรึกษาตรวจให้คะแนน เสนอโครงงาน หรือวิเคราะห์ความพร้อมวัตถุดิบลายไขมันพืช</p>
                 </div>
               </div>
 
@@ -1308,146 +1243,6 @@ export default function App() {
                     </div>
                   </div>
                 )}
-              </section>
-
-            </div>
-          )}
-
-          {/* ==================== TAB 4: TEACHER EVALUATIONS & AUDIENCE FEEDBACK ==================== */}
-          {activeTab === 'feedback' && (
-            <div className="space-y-8 animate-fadeIn">
-              
-              <div id="feedback-header" className="pb-3 border-b border-slate-200">
-                <h2 className="text-xl font-bold dark:text-white">ความคิดเห็นและแบบประเมินผลโครงงาน</h2>
-                <p className="text-xs text-slate-500">ผลการสนับสนุนจากกรรมการวิชาการ ครูที่ปรึกษา และการประเมินจากผู้ใช้งานทั่วไป</p>
-              </div>
-
-              {/* Feedbacks Grid List */}
-              <div className="space-y-4">
-                {feedbacks.map((fb) => (
-                  <div
-                    key={fb.id}
-                    id={`feedback-card-${fb.id}`}
-                    className={`p-5 rounded-2xl border shadow-sm space-y-3 ${
-                      a11y.highContrast ? 'bg-zinc-900 border-zinc-800 text-white' : 'bg-white border-slate-100'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="w-8 h-8 rounded-full bg-pcshs-orange/20 text-pcshs-orange flex items-center justify-center font-bold text-xs">
-                          {fb.author.substring(0, 2)}
-                        </span>
-                        <div>
-                          <span className="font-bold text-slate-900 dark:text-zinc-100 text-sm block">{fb.author}</span>
-                          <span className={`text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider ${
-                            fb.role === 'ผู้เชี่ยวชาญ' || fb.role === 'กรรมการวิชาการ'
-                              ? 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300'
-                              : fb.role === 'ครูที่ปรึกษา'
-                              ? 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300'
-                              : 'bg-slate-100 text-slate-700 dark:bg-zinc-800 dark:text-zinc-300'
-                          }`}>
-                            {fb.role}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="flex items-center gap-0.5 text-yellow-500 justify-end">
-                          {Array.from({ length: fb.rating }).map((_, i) => (
-                            <span key={i} className="text-sm">★</span>
-                          ))}
-                        </div>
-                        <span className="text-[10px] text-slate-400 block">{fb.createdAt}</span>
-                      </div>
-                    </div>
-
-                    <p className={`text-slate-700 dark:text-zinc-200 ${getFontSizeClass('body')}`}>
-                      {fb.content}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Create feedback form */}
-              <section id="feedback-form-block" className={`p-6 rounded-2xl border shadow ${
-                a11y.highContrast ? 'bg-zinc-900 border-zinc-800 text-white' : 'bg-white border-slate-200'
-              }`}>
-                <h3 className="font-bold text-md text-pcshs-blue dark:text-orange-400 mb-4 flex items-center gap-1">
-                  <span>🖋️ บันทึกความคิดเห็น / ประเมินโครงงานอาหารทดแทน</span>
-                </h3>
-
-                <form onSubmit={handleAddFeedback} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-xs font-semibold text-slate-500">ชื่อผู้ร่วมตรวจสอบความคิดเห็น:</label>
-                      <input
-                        id="comment-input-name"
-                        type="text"
-                        required
-                        value={newFeedback.author}
-                        onChange={(e) => setNewFeedback(prev => ({ ...prev, author: e.target.value }))}
-                        placeholder="ชื่อ-นามสกุล ของท่าน"
-                        className="w-full text-xs p-2.5 rounded-lg border border-slate-200 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white outline-none focus:ring-1 focus:ring-pcshs-orange"
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <label className="text-xs font-semibold text-slate-500">สถานะของท่าน:</label>
-                      <select
-                        id="comment-select-role"
-                        value={newFeedback.role}
-                        onChange={(e: any) => setNewFeedback(prev => ({ ...prev, role: e.target.value }))}
-                        className="w-full text-xs p-2.5 rounded-lg border border-slate-200 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
-                      >
-                        <option value="ผู้ชมทั่วไป">ผู้ชมบุคคลทั่วไป</option>
-                        <option value="ครูที่ปรึกษา">ครูวิทยาศาสต์ / อาจารย์วิทยาศาสตร์</option>
-                        <option value="ผู้เชี่ยวชาญ">ผู้เชี่ยวชาญด้านอาหารและโภชนาการ</option>
-                        <option value="กรรมการวิชาการ">กรรมการการประกวด</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-1">
-                      <label className="text-xs font-semibold text-slate-500">คะแนนความพึงพอใจและคุณประโยชน์:</label>
-                      <div className="flex items-center gap-2">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <button
-                            key={star}
-                            id={`btn-rating-star-${star}`}
-                            type="button"
-                            onClick={() => setNewFeedback(prev => ({ ...prev, rating: star }))}
-                            className={`text-xl cursor-pointer ${
-                              newFeedback.rating >= star ? 'text-yellow-500' : 'text-slate-300'
-                            }`}
-                          >
-                            ★
-                          </button>
-                        ))}
-                        <span className="text-xs text-slate-500 font-bold">({newFeedback.rating}/5 คะแนน)</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold text-slate-500">เนื้อหาคำติชมหรือคำแนะนำมีประโยชน์:</label>
-                    <textarea
-                      id="comment-input-content"
-                      required
-                      rows={3}
-                      value={newFeedback.content}
-                      onChange={(e) => setNewFeedback(prev => ({ ...prev, content: e.target.value }))}
-                      placeholder="คำแนะนําเพิ่มเติมเชิงบวก ทฤษฎีกรดอะมิโน วิเคราะห์ Kjeldahl หรือความประพฤติโครงงาน..."
-                      className="w-full text-xs p-3 rounded-xl border border-slate-200 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white outline-none focus:ring-1 focus:ring-pcshs-orange"
-                    />
-                  </div>
-
-                  <button
-                    id="btn-comment-submit"
-                    type="submit"
-                    className="bg-pcshs-blue hover:bg-pcshs-blue-light text-white py-2 px-6 rounded-lg text-xs font-bold transition-all shadow cursor-pointer"
-                  >
-                    ส่งผลบันทึกประเมิน ⚡
-                  </button>
-                </form>
               </section>
 
             </div>
